@@ -1,0 +1,49 @@
+\documentclass[../notes.tex]{subfiles}
+\graphicspath{{\subfix{../img/}}}
+\begin{document}
+
+\section{Linear Control Methods}
+\subsection{Open Loop}
+The system identification reveals how the inputs affect the outputs and the state of the system. We can work backwards from the desired output to find the required input. 
+\paragraph{Example} In the context of a car's cruise control, we would like to achieve a desired speed with our throttle input. With a model of the car, we can determine the effect of the factors at play in the system: Throttle response, engine force, drag force, tire friction, etc. Treating the system as an equation and solving through, the throttle input required can be solved.
+\subsection{Closed Loop (Feedback)}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{feedback_block.png}
+    \caption{Block Diagram of Feedback Loop}
+    \label{fig:feedbackBlock}
+\end{figure}
+\paragraph{Example} Returning to the example of the cruise control, imagine that the same system (plant + controller) encounters a hill. Climbing up the slope changes the effect of the gravity force, meaning that our previous throttle input is not longer bringing the desired results. If a feedback system is implemented, the error between the desired speed and the actual speed can be calculated. With this information available, we can design our controller to account for disturbances, such as that hill.
+\subsubsection{Purpose}
+\begin{emphasis} \label{sec:feedbackMyopia}
+   $\boxed{\text{Note:}}$ Feedback control systems may be myopic! In many designs, they do not have the information or sophistication to understand that current decisions might make control of the vehicle impossible later on!
+\end{emphasis}
+
+\subsection{Bode Plots}
+
+\subsection{PID Control}
+The PID controller is one of the simplest types of controllers.
+\begin{description}
+    \item[Proportional Gain (P term)] Applies a control input proportional to the amount of error.
+    \item[Integral Gain (I term)] Applies a control input proportional to the integral of error (sum of error over time). This term is useful for countering steady-state error.
+    \item[Derivative Gain (D term)] Applies a control input proportional to the rate of change of the error. This term is useful for countering overshoot.
+\end{description}
+The PID controller can also be represented as a transfer function.
+\begin{equation} \label{eq:PIDTF}
+    K_p + \frac{K_i}{s} + K_d s = \frac{K_ds^2 + K_ps + K_i}{s}
+\end{equation}
+\subsubsection{Integrator Anti-windup Term}
+In certain cases where the error does not correct rapidly, the I term may "wind up" (error over time builds up, resulting in large corrections). The large correction applied may destabilize the system. To counter this, an "anti-windup" term can be used, to limit the sum of error the integral term sees.
+\paragraph{Example}
+\subsection{Higher-order Controllers}
+\subsubsection{Lead-Lag Control}
+\subsection{Feedforward}
+Feedforward control can address some of the drawbacks of feedback control, such as the case of myopia (\underline{\ref{sec:feedbackMyopia}}). For this reason, feedforward is sometimes referred to as guidance.
+\subsection{Designing the Controller}
+\subsubsection{Frequency Response Method}
+\subsubsection{Loop-Shaping Method}
+Loop-shaping is somewhat of an enhancement to the frequency response method, using the Nyquist plot in addition to the Bode plot.
+\subsubsection{Root Locus Method}
+\subsection{Multi-Input, Multi-Output (MIMO)}
+
+\end{document}

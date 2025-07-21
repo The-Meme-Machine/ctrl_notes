@@ -1,0 +1,14 @@
+# If you would like my writeups in pdf format, email me
+*.pdf
+*.log
+*.toc
+*.out
+*.fls
+*.aux
+*.mst
+*.idx
+*.ind
+*.ilg
+*.fdb_latexmk
+*.synctex*
+!notes.pdf

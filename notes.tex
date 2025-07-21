@@ -1,0 +1,129 @@
+\documentclass[a4paper, 12pt, use style=flow, title in boldface, theorem in new line, emphasize theorems]{einfart} % fast
+\usepackage{minimalist}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{lipsum}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{subfiles}
+
+\usepackage{draftwatermark}
+\SetWatermarkText{}
+\SetWatermarkScale{0}
+
+% \setmainfont{C:/Windows/Fonts/SourceHanSansSC.ttc}[FontIndex=0]
+
+\graphicspath{{img/}}
+
+\setlength\parindent{0pt}
+\renewcommand{\arraystretch}{1.4}
+% \usepackage[top=1in,left=1in,right=1in,bottom=1in]{geometry}
+
+% Increase section numbering
+% \setcounter{secnumdepth}{3}
+
+\setcounter{tocdepth}{3}
+
+% \renewcommand{\contentsname}{Table of Contents}
+\setlocalecaption{english}{contents}{Table of Contents}
+
+% Hide link borders
+\hypersetup{
+    colorlinks = false,
+    linkbordercolor = [rgb]{0.13, 0.117, 0.109},
+}
+
+% Dark mode
+\pagecolor[rgb]{0.13, 0.117, 0.109} 
+% \color[rgb]{0.463,0.431,0.415} % low contrast
+\color[rgb]{0.686, 0.663, 0.649} % high contrast
+ 
+\title{Notes on Control Systems}
+\author{Iliyan Stoyanov}
+\date{May 2025}
+
+\begin{document}
+
+% Title Page
+\begin{center}
+\LARGE
+Control, Estimation, Modeling \\
+\vspace{0.5in}
+\Huge 
+\textbf{Compiled Notes on Control Theory} \\
+\vspace{3.5in}
+\Large
+% author here (not gonna doxx myself)
+\vspace{1in}
+\normalsize
+\vspace{3in}
+June 2025
+\end{center}
+
+\newpage
+
+\tableofcontents
+
+\newpage
+\subfile{sections/goal}
+
+\newpage
+\subfile{sections/background}
+
+\newpage
+\subfile{sections/ident}
+
+\newpage
+\subfile{sections/linear_ctrl}
+
+\newpage
+\subfile{sections/nonlinear-ctrl}
+
+\newpage
+\subfile{sections/estim}
+
+\newpage
+\subfile{sections/model}
+
+\newpage
+\section{Optimal Control}
+\subsection{Linear-Quadratic Regulator (LQR)}
+
+\newpage
+\section{Robust Control}
+
+\newpage
+\section{Adaptive Control}
+
+\newpage
+\section{Predictive Control}
+
+\newpage
+\subfile{sections/misc}
+
+\newpage
+\subfile{sections/reference}
+
+\newpage
+\subfile{sections/matlab}
+
+\newpage
+\subfile{sections/python}
+
+\newpage
+\section{References}
+
+\end{document}
+

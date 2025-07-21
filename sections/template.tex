@@ -1,0 +1,55 @@
+\documentclass[../notes.tex]{subfiles}
+\graphicspath{{\subfix{../img/}}}
+\begin{document}
+
+
+
+\end{document}
+
+% \section{Programming Exercise: Importance Sampling}
+% Estimating the non-linear system
+% \begin{align*}
+%     X &= U + Z \\
+%     Y &= X + W \\
+%     Z \sim \mathcal{N}(0,R), \quad W &\sim \mathcal{N}(0,Q), \quad U \sim \text{Unif}(\{-1, 1\})
+% \end{align*}
+% To derive the estimator, we must calculate the conditional expectation. However, the posterior distribution is difficult to compute.
+% \begin{align*}
+%     \Bbb{E}[X|Y=y] &= \int x\cdot P_{X|Y}(x|y)dx \\
+%     \text{Apply Bayes' Rule} \quad & \Rightarrow P_{X|Y}(x|y) \\
+%     \Bbb{E}[X|Y=y]&= \frac{P_{Y|X}\cdot P_{X}}{P_Y} = \frac{\int x \cdot P_{Y|X}\cdot P_{X}}{\int P_{Y|X}\cdot P_{X}}\\
+%     P_X &= \text{Mixture of two Gaussians} = \frac{1}{\sqrt{2 \pi Q}}e^{-\frac{(x+1)^2}{2 R}} + \frac{1}{\sqrt{2 \pi Q}}e^{-\frac{(x-1)^2}{2 R}} \\
+%     P_{Y|X} &= \text{Gaussian} \sim \mathcal{N}(X,R) = \frac{1}{\sqrt{2 \pi R}}e^{-\frac{(y-x)^2}{2 R}} \\
+%     P_Y &= \text{Marginal distribution. must approximate} \\
+%     \text{Thus the estimator is } f^N(y) &= \sum^N_{i=1}\frac{X_i \cdot \frac{1}{\sqrt{2 \pi R}}e^{-\frac{(y-X_i)^2}{2 R}}}{\sum^N_{j=1} \frac{1}{\sqrt{2 \pi R}}e^{-\frac{(y-X_j)^2}{2 R}}} = \sum^N_{i=1}\frac{X_i \cdot e^{-\frac{(y-X_i)^2}{2 R}}}{\sum^N_{j=1} e^{-\frac{(y-X_j)^2}{2 R}}}
+% \end{align*}
+
+
+% \pagebreak
+% \section{Programming Exercise: SIR Particle Filter}
+% The problem considers a robot with 3 degrees of freedom. The state variables and their dynamics are defined as follows, with $u$ being the (constant and known) positional input, and $w$ being the rotational input. The variable $v(t) \sim \mathcal{N}(0,1)$ has three independent components, and represents the state uncertainty.
+% \begin{equation*}
+%     X(t) = \begin{bmatrix}
+%         x(t)\quad\text{"position in x w.r.t origin"} \\ y(t)\quad\text{"position in y w.r.t. origin"} \\ \theta(t)\quad\text{"orientation w.r.t. origin"}
+%     \end{bmatrix}, \quad
+%     f(X(t)) = \begin{bmatrix}
+%         x(t) + u\cos{(\theta(t))} + \alpha v_1(t) \\
+%         y(t) + u\sin{(\theta(t))} + \alpha v_2(t) \\
+%         \theta(t) + w + \alpha v_3(t)
+%     \end{bmatrix}
+% \end{equation*}
+% The goal is to estimate the position of the robot using two sensors, placed at $(1, 0)$ and $(-1,0)$ with respect to the origin. The random variable $W(t)\sim\mathcal{N}(0,1)$ has two independent components, and represents the sensor noise. The measurement model is therefore:
+% \begin{equation*}
+%     h(Y(t)) = \begin{bmatrix}
+%         \sqrt{(x(t) - 1)^2 + y(t)^2} + \beta W_1(t) \\
+%         \sqrt{(x(t) + 1)^2 + y(t)^2} + \beta W_2(t)
+%     \end{bmatrix}
+% \end{equation*}
+% The scaling variables used were set as:
+% \begin{equation*}
+%     \alpha = 0.1,\quad \beta = 0.5, \quad u=0.1,\quad \theta=0.05
+% \end{equation*}
+% \subsection{True Initialization, Low Particle Count}
+% The particle filter was initialized with mean $\begin{bmatrix}
+%    2 &0 &0 &\frac{\pi}{2} 
+% \end{bmatrix}$ and an identity covariance matrix. 100 particles were calculated per time step for this configuration.
