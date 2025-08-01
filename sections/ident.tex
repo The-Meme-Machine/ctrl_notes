@@ -9,11 +9,132 @@ Before we can understand how to control a system, we must first understand how t
 \end{emphasis}
 
 \subsection{Linear Regression}
-\subsection{Linear, Time-Invariant Systems (LTI)}
-\subsection{Linear, Time-Varying Systems (LTV)}
 \subsection{State-space Models}
+State space models are a useful way to describe a system. A typical LTI system can be arranged as follows:
+\begin{equation*}
+    x(t) - \text{state} \quad y(t) - \text{output} \quad u(t) - \text{input}
+\end{equation*}
+\begin{align*}
+    \dot{x}(t) &= Ax(t) + Bu(t) \\
+    y(t) &= Cx(t) + Du(t)
+\end{align*}
+\begin{align*}
+    A &\in \mathbb{R}^{n_x \times n_x} \quad \text{zero input dynamics matrix}\\
+    B &\in \mathbb{R}^{n_x \times n_u} \quad \text{input matrix}\\
+    C &\in \mathbb{R}^{n_y \times n_x} \quad \text{output matrix}\\
+    D &\in \mathbb{R}^{n_y \times n_u} \quad \text{pass-through matrix}
+\end{align*}
+
+
+\subsection{Linear, Time-Invariant Systems (LTI)}
+
+\subsubsection{Properties}
+\begin{description}
+    \item[Homogeneity] $\begin{cases*}
+        x(t_0), u(t) \rightarrow y(t) \\
+        \alpha x(t_0), \alpha u(t_0) \rightarrow \alpha y(t)
+    \end{cases*}$
+    \item[Additivity] $\begin{cases*}
+        x_1(t_0), u_1(t) \rightarrow y_1(t) \\
+        x_2(t_0), u_2(t) \rightarrow y_2(t)
+    \end{cases*} \Rightarrow x_1(t_0) + x_2(t_0), u_1(t) + u_2(t) \rightarrow y_1(t) + y_2(t)$
+    \item[Time Invariance] For the same input, the response at an time will be the same.
+\end{description}
+
+\subsubsection{Convolution}
+The uniformity and superposition allows us to use the response to a known unput to comput the response to a generic input. Convolution is the mathematical operation  by which we generate the response to said generic input. It's only because of the time uniformity and superposition that convolution is useful and gets its own name (unlike other mathematical constructs). \\
+In the time domain the definition is:
+\begin{equation}
+    y(t) = [h*u](t) = \int_{0}^{t}h(\tau)u(t-\tau)d\tau = \int_{0}^{t}h(t-\tau)u(\tau)d\tau
+\end{equation}
+Where h(t) is the impulse response of the LTI system impulse response is the response to a unit impulse $\delta(t)$.
+\begin{equation}
+    \delta(t) = \begin{cases}
+        \infty, \text{ at } t=0 \\
+        0 \text{ otherwise}
+    \end{cases}
+\end{equation}
+Assuming zero initial conditions:
+\begin{equation*}
+    h(t) = Ce^{At}B + D\delta(t)
+\end{equation*}
+The impulse response is by definition a time domain concept, as it is defined as the time domain output of an LTI system to a unit time domain impulse in the input.
+\paragraph{Visualization of Convolution}
+The input can be interpreted as a sequence of impulses offset in time, each setting off its own impulse response that is scaled in magnitude by the magnitude of $u(t)$ at said time. The output can be understood as the sum of the resulting scaled and time shifted impulse responses. \\
+For any initial condition the output $y(t)$ of an LTI system due to a sinusoidal input $u(t)$ will converge to a steady state output $y_{ss}(t)$ as $t\rightarrow\infty$, assuming a steady state output exists. The output will be a sinusoid of the same frequency as $u(t)$, with a different magnitude and phase shift. The magnitude and phase shift can be gleaned from the transfer function (specifically from the Bode plot).\\
+Each block in a control diagram represents a convolution. Thus, we need a more intuitive way to perform the operation, which can be done in the frequency domain, which can be done with the Laplace transform.
+
+\subsection{Linear, Time-Varying Systems (LTV)}
+For an LTV system, the system is time-varying because at least one of the four system matrices changes with time, not because $x,y,u$ change with time! The primary shortcoming of LTV systems is their dependence on the initial time. An input and initial condition might have different responses over different time intervals. We cannot guarantee homogeneity and additivity over shifted time intervals.
+\begin{align*}
+    \dot{x}(t) &= A(t)x(t) + B(t)u(t) \\
+    y(t) &= C(t)x(t) + D(t)u(t)
+\end{align*}
+\begin{equation*}
+    A(t) \in \mathbb{R}^{n_x \times n_x} \quad
+    B(t) \in \mathbb{R}^{n_x \times n_u} \quad
+    C(t) \in \mathbb{R}^{n_y \times n_x} \quad
+    D(t) \in \mathbb{R}^{n_y \times n_u} 
+\end{equation*}
+\subsubsection{Properties}
+\begin{description}
+    \item[Homogeneity] $\begin{cases*}
+        x(t_0), u(t) \rightarrow y(t) \\
+        \alpha x(t_0), \alpha u(t_0) \rightarrow \alpha y(t)
+    \end{cases*}$
+    \item[Additivity] $\begin{cases*}
+        x_1(t_0), u_1(t) \rightarrow y_1(t) \\
+        x_2(t_0), u_2(t) \rightarrow y_2(t)
+    \end{cases*} \Rightarrow x_1(t_0) + x_2(t_0), u_1(t) + u_2(t) \rightarrow y_1(t) + y_2(t)$
+\end{description}
+Together, these two properties are called \underline{superposition}. These properties do not hold under time shifts, however.
+\paragraph{State Transition Matrix}
+Governs zero-input dynamics.
+\begin{equation*}
+    \Phi_A(t_0,t_0) = I_{n_x \times n_x}, \quad \dot{\Phi}_A(t_0,t_0) = A(t)\Phi_A(t_0,t_0)
+\end{equation*}
 \subsection{Modal Analysis}
-Eigenvalues (\underline{\ref{sec:eig}}) come in handy for understanding how a system reacts to input.
+Eigenvalues (\underline{\ref{sec:eig}}) are critical for understanding how a system reacts to input. A mode of a system is the time response associated with either a simple eigenvalue and associated eigenvector, or a complex conjugate pair of eigenvalues + eigenvectors. \\
+Maximum number of modes is $n_x$, and minimum is $n_x / 2$ (which is if all eigenvalues are complex conjugate pairs.)
+\begin{equation*}
+    \dot{x}(t) = Ax(t)
+\end{equation*}
+If we define the initial conditions as:
+\begin{align*}
+    x(0) &= v_i \text{ where $v_i$ is an eigenvector of }A \\
+    \dot{x}(0) &= Ax(0) = Av_i = \lambda_i v_i
+\end{align*}
+Since $\lambda$ is a scalar, this equation implies the state of the system will evolve parallel to $v_i$. This means that $\dot{x}(t)$ will always remain aligned with $v_i$, and $x(t)$ will never come out of alignment.
+\paragraph{Observations}
+\begin{itemize}
+    \item The real part of the eigenvalue $\lambda_i$ dictates the exponential growth of decay of $x_{mj}(t)$.
+    \item The imaginary part of eigenvalue $\lambda_i$ dictates the frequency with which $x_{mj}(t)$ oscillates.
+    \item The eigenvector $v_i$ encodes the relative phase and magnitude of each state in $x(t)$. The phase information is encoded by the relative phase of the complex elements of the vector $v_i$.
+    \item The scalar $\alpha_0$ determines theh initial scaling and phase shift of all the states in $x(t)$.
+\end{itemize}
+\begin{equation*}
+    X_{mj}(t) = \alpha_0 v_i e^{\lambda_i t} = \alpha_0 v_i e^{\text{Re}(\lambda_i)t}[\cos(\text{Im}(\lambda_i)t) + j\sin(\text{Im}(\lambda_i)t)]
+\end{equation*}
+Any zero input motion that a given LTI system can exhibit can be expressed as a superposition of the system modes.
+
+\subsubsection{System Poles}
+
+\subsubsection{System Zeros}
+The presence of a zero in an LTI system is an indication that the system can exhibit zero output even when the state and control input are nonzero. Intuitively: the presence of a zero implies that there are special combinations of non-zero initial conditions and non-zero control input that produce non-zero state time histories and zero output time histories.
+\begin{equation*}
+    x(0) \neq 0, u(t) \neq 0 \Rightarrow x(t) \neq 0, y(t) = 0
+\end{equation*}
+Components of the initial conditions and control input may combine and vanish, resulting in no perceptible contribution to the input. It follows that removing said components from the initial conditions and control input would generate the same output $y(t)$. \\
+Not all LTI systems have zeros. Zeros are properties of the system at hand. Unlike poles, zeros do not influence the BIBO stability of the system. The BIBO stability is determined by the location of its poles, even in cases that even have zeros in the right hald plane.
+\paragraph{Formal Definition of a Zero}
+Goal: find non-zero initial conditions and control input so that the output is zero for all time.
+\begin{equation*}
+    \zeta (t) := \begin{bmatrix}
+        x(t) \\ u(t)
+    \end{bmatrix} \neq 0 \Rightarrow y(t) = 0
+\end{equation*}
+
+\subsubsection{System Modes for Second-order Systems}
 \subsubsection{Bounded Input, Bounded Output Stability}
 
 \subsection{Frequency Domain Methods}

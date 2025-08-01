@@ -3,12 +3,53 @@
 \begin{document}
 
 \section{Nonlinear Methods}
-A nonlinear plant is one that includes nonlinear functions in its dynamics (eg. powers, sine, cosine).
+A nonlinear plant is one that includes nonlinear functions in its dynamics (eg. powers, sine, cosine). Refer to (\underline{\ref{sec:coupled_diff_eq}}). Many of the assumptions that allow us to solve linear systems do not apply. For example, superposition is generally not true for a nonlinear system. \\
+A typical nonlinear dynamical system:
+\begin{align*}
+    \dot{x}(t) &= f(t, x(t), u(t)) \\
+    y(t) &= g(t, x(t), u(t))
+\end{align*}
+where $t \in \mathbb{R}$ is monotonically increasing. $f$ defines the dynamics of the system (nonlinear). $g$ defines the output (measured quantities).
+\paragraph{Example}
+A classic example is the two dimensional mass-spring-damper system. No forces are present in the springs and dampers when $p_x = p_y = \dot{p}_x = \dot{p}_y = 0$. Gravity is neglected for this problem.
+\begin{equation*}
+    x = \begin{bmatrix}
+        p_x \\ p_y \\ \dot{p}_x \\ \dot{p}_y
+    \end{bmatrix}, \quad 
+    u = \begin{bmatrix}
+        f_x \\ f_y
+    \end{bmatrix}, \quad
+    y = \begin{bmatrix}
+        p_x \\ p_y
+    \end{bmatrix}
+\end{equation*}
+Defining $\delta_p$ as the spring displacement, the equations of motion are therefore
+\begin{equation*}
+    f(t,x,u) = \begin{bmatrix}
+        \dot{p}_x \\
+        \dot{p}_y \\
+        \sum_{i=1}^3 \frac{k_i}{m}\delta_{p,i} \hat{n}_{x,i} + \sum_{i=1}^{3} \frac{c_i}{m}\delta_{\dot{p},i} \hat{n}_{x,i} + \frac{f_x}{m}\\
+        \sum_{i=1}^3 \frac{k_i}{m}\delta_{p,i} \hat{n}_{y,i} + \sum_{i=1}^{3} \frac{c_i}{m}\delta_{\dot{p},i} \hat{n}_{y,i} + \frac{f_y}{m} \\
+    \end{bmatrix}
+\end{equation*}
+Assuming that the mass has neglible dimension, and defining $p = \begin{bmatrix}
+    p_x \\ p_y
+\end{bmatrix}$:
+\begin{align*}
+    \delta_{p,i} &= ||p_i||_2 - ||p_i - p||_2 \\
+    \delta_{\dot{p},i} &= -\dot{p}^\intercal \hat{n}_i \\
+    \hat{n}_i &= \frac{p - p_i}{||p - p_i||_2}
+\end{align*}
+Note that we have arbitrarily defined the outputs $y(t)$ of the system to be the $x,y$ position of the mass. If we were measuring the position and velocity, the choice of output would be different.
 \subsection{Linearization}
 The easiest way to control a nonlinear system is by making it linear. The Jacobian matrix (\underline{\ref{sec:jacobian}}) can be calculated about the point.
 \begin{emphasis}
     Beware that the accuracy of the linearized model decreases the farther away (in terms of state) you are calculating. If compute power allows, 
 \end{emphasis}
+\subsubsection{Taylor Series Expansion}
+One method to linearize is to use the Taylor series expansion and retain only the zero-th and first order term.
+\subsubsection{Jacobian}
+Refer to section (\underline{\ref{sec:jacobian}}).
 \subsection{Sliding Mode Control}
 
 \end{document}

@@ -7,11 +7,23 @@ Some background information must be understood before delving into control theor
 \subsection{Calculus}
 I am not trying to rewrite a textbook here, nor do I have to knowledge to. This will just be a quick refresher on the most important topics.
 \subsubsection{Differentiation}
+It can be simply described as the rate of change of a quantity or function. Represented by the slope of a function.
 \subsubsection{Integration}
+It can be simply described as the sum of change of a quantity or function. Represented by the area under the curve of a function.
+
+\subsubsection{Taylor Series}
 
 \subsection{Differential Equations}
 \subsubsection{Ordinary (ODE)}
 \subsubsection{Partial (PDE)}
+\subsubsection{Coupled First-order Nonlinear Differential Equations} \label{sec:coupled_diff_eq}
+\begin{description}
+    \item[Coupled] - variables $x_i$ might appear in equations $x_j$ for $i \neq j$. Control input $u_i$ may affect multiple states $x_j$ simultaneously. A single state may be affected by multiple control inputs at once.
+    \item[First-order] - Highest derivative is the first derivative.
+    \item[Nonlinear] - equations include terms that cannot be expressed as linear combinations (scaling, addition) of $x$ and $u$. In practice, this happens when $x$ and $u$ have non-unity exponents or are included inside
+    \item[Ordinary] - Equations include a partial w.r.t. only one variable (usually $t$, in contrast to a PDE)    
+\end{description}
+
 \subsubsection{Jacobian Matrix} \label{sec:jacobian}
 
 \subsubsection{Convolution}
@@ -31,34 +43,101 @@ This transform converts a continuous time domain signal into a continuous freque
 
 \subsubsection{Laplace Transforms}
 The Laplace transform is a more general case of the Fourier transform.
+\begin{equation}
+    F(s) = \int_{0}^{\infty}f(t)e^{-st}dt
+\end{equation}
+A system's transfer function is the Laplace transform of the system's impulse response. For a given LTI system, the transfer function is unique, whereas the state space represention may not be. Like the transfer function, the feedthrough $D$ matrix is always unique.
+
+\paragraph{Convolution Theorem}
+Convolution in the time domain is equal to multiplication in the frequency domain.
+\begin{equation}
+    \mathcal{L}\{[x * y](t)\} = X(s) \cdot Y(s)
+\end{equation}
 
 \paragraph{Transfer Functions}
-Applying the Laplace transform to a time domain function will produce the frequency domain representation of that function, also known as a transfer function.
+Applying the Laplace transform to a time domain function will produce the frequency domain representation the input-output relationship of a SISO LTI system. Classical transfer functions do not exist for LTV or nonlinear systems. In the typical state space system:
+\begin{align*}
+    \dot{X}(s) = sX(s) - X(0) &= AX(s) + BU(s) \\
+    Y(s) &= CX(s) + DU(s)
+\end{align*}
+Solving this system gives 
+\begin{equation}
+    Y(s) = C(sI-A)^{-1}[BU(s) + X(0)] + DU(s)
+\end{equation}
+The quantity $(sI-A)^{-1}$ is called the resolvant of A and represents the Laplace transform of the state transistion matrix. Like the state transistion matrix, the resolvant is always invertible, regardless of the invertibility of $A$. If the initial condition is zero:
+\begin{equation}
+    T(s) := \frac{Y(s)}{U(s)} = C(sI-A)^{-1}B+D
+\end{equation}
 
 \paragraph{Geometry of Transfer Functions}
 
 \subsubsection{Delayed Differential Equations}
+DDE are when the system depends on a delayed version of state.
+\begin{equation}
+    \text{eg. }u(t) = x(t-\tau), \text{ with } \tau > 0
+\end{equation}
+These types of equations require specialized solvers.
 
 \subsubsection{Poles \& Zeros}
-The poles and zeros of a transfer function provide some critical information
+The poles and zeros of a transfer function provide some critical information on the behavior of a system.
+
+\paragraph{Poles}
+
+\paragraph{Zeros}
+
+\paragraph{Relative Degree of Transfer Functions}
+A transfer function with $n_p$ poles and $n_z$ zeros has a relative degree of $n_p - n_z$. \\
+\begin{description}
+    \item[Strictly Proper] A transfer function whose numerator has a lesser order than the denominator (relative degree greater than zero) is called strictly proper.
+    \item[Semi-Proper] When the relative degree is zero, the transfer function is bi-proper or semi-proper.
+    \item[Improper] When the numerator is a greater order than the denominator, the transfer function is improper. 
+\end{description}
+The feed-through matrix $D$ is zero when the transfer function is strictly proper, and non-zero when the transfer function is semi-proper. A state-space represention of a system only exists if the transfer function is proper (either strictly proper or semi-proper). No definitions of $x, A, B, C, D$ can be found for an improper system. Physical systems are always proper, and practically always strictly proper.
 
 \subsection{Linear Algebra}
 \subsubsection{Basic Operations}
 \subsubsection{Matrix Inversion}
 \subsubsection{Eigenvectors \& Eigenvalues} \label{sec:eig}
+The eigenvalue problem seeks to find the directions $v$ of the square matrix $A$ that result in a pure scaling of $\lambda$ of $v$ when $A$ is right-multiplied by $v$.
+\begin{description}
+    \item[$\lambda$] - Eigenvalues
+    \item[$v$] - Eigenvectors  
+\end{description}
+This must satisfy the following equation:
+\begin{equation}
+    Av_i = \lambda_i v_i
+\end{equation}
+where in general $\lambda_i \in \mathbb{C}$ is a complex scalar and $v_i \in \mathbb{C}^{n_x}$ is a complex $n_x \times 1$ vector. Since we are interested in physical systems, we restrict our attention to real squares matrices $A\in \mathbb{R}^{n_x \times n_x}$.
+\begin{itemize}
+    \item $\lambda_i$ and $v_i$ can be complex when $A$ is real.
+    \item When $A$ is real, $\lambda_i$ and $v_i$ will either be both real or both complex.
+    \item When $A$ is real, $\lambda_i$ will always come in complex conjugate pairs. A real matrix $A$ should never have an odd number of complex eigenvalues, and these eigenvalues should be symmetric about the real axis when viewed in the s-plane.
+\end{itemize}
+\paragraph{Finding Eigenvalues}
+\begin{equation*}
+    \text{det}(\lambda_i I - A) = 0
+\end{equation*}
+The computation forms a $n_x^{\text{th}}$-order polynomial in $\lambda_i$ when $n_x$ roots - each root representing possibly repeated eigenvalues. The eigenvector corresponding to an egienvalue represents the direction associated with the null-space of the matrix $(\lambda_i I -A)$. The eigenvectors associated with an eigenvalue can be used to span the null space of $\lambda_i I - A$.
 
+\paragraph{Relating Eigenvalues and Poles}
+det($s I - A$) is the characteristic polynomial, the roots of which are both the poles and eigenvalues of the system. This also means the eigenvalues and poles are not only dependent on $A$ and are thus independent of the input or output.
 
 \subsection{Mechanics (Newtonian)}
 Understanding the physics that inform the behavior of a system is critical to modeling and controlling it.
 \begin{description}
-    \item[Newton's 1st Law]
-    \item[Newton's 2nd Law]
-    \item[Newton's 3rd Law]  
+    \item[Newton's 1st Law] A body remains at rest, or in motion at a constant speed in a straight line, unless it is acted upon by a force
+    \item[Newton's 2nd Law] At any instant of time, the net force on a body is equal to the body's acceleration multiplied by its mass or, equivalently, the rate at which the body's momentum is changing with time.
+    \item[Newton's 3rd Law] If two bodies exert forces on each other, these forces have the same magnitude but opposite directions.
 \end{description}
 \subsubsection{Linear}
+\paragraph{Position / Velocity / Acceleration}
+\paragraph{Momentum}
 \subsubsection{Rotational}
+\paragraph{Angular Position / Velocity / Acceleration}
+\paragraph{Angular Momentum}
 \paragraph{Coriolis Force}
 The presense of rotation adds an additional (faux) force. This is described further in (\underline{\ref{sec:coriolis}}).
+\subsubsection{Energy}
 \subsubsection{Electrical}
 Electrical circuits can be modeled very similarly to the mechanical system. The classic example is RLC (resistor-inductor-capacitor) circuits.
 
