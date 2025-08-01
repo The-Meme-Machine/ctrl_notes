@@ -7,14 +7,24 @@
 \subsection{Observer}
 \subsection{Measurement Model}
 \subsection{Filtering}
+Filtering is the real-time subset of estimators.
 \subsubsection{Calibration}
+\subsection{Complementary Filter}
+\subsection{Alpha-Beta Filter}
+\subsubsection{Alpha-Beta-Gamma Filter}
+\subsection{Least-Squares Estimator}
 \subsection{Linear-Quadratic Estimator (Kalman Filter)}
 \subsubsection{Extended Kalman Filter (EKF)}
+The Kalman filter is limited to linear systems. One method to apply it to nonlinear systems is to linearize the system at the current time step, and perform the same algorithm.
 \subsubsection{Unscented Kalman Filter (UKF)}
 \subsection{Particle Filter}
 \subsubsection{SIS Filter}
 \subsubsection{SIR Filter}
 \subsubsection{The Curse of Dimensionality}
 \subsection{Ensemble Kalman Filter (EnKF)}
+\subsection{Sensor Fusion}
+\subsubsection{Madgwick Filter}
+Note the quaternion derivative appears (Eq. \ref{eq:quat_derivs}).
+\subsubsection{Mahoni Filter}
 
 \end{document}

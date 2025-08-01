@@ -5,6 +5,10 @@
 \section{Modeling \& Simulation}
 % \subsection{Physical Systems}
 \subsection{Reference Frames}
+\subsubsection{Inertial Frame}
+\subsubsection{Body Frame}
+\subsubsection{North-East-Down Frame}
+\subsubsection{Intermediate Frames}
 \subsubsection{Coriolis Forces} \label{sec:coriolis}
 
 \subsection{Determining the State Vector}
@@ -13,6 +17,29 @@
 \paragraph{Euler Angles}
 \paragraph{Direction Cosine Matrices}
 \paragraph{Quaternions}
+\paragraph{Quaternion Derivatives}
+\begin{equation} \label{eq:quat_derivs}
+    \dot{q} = \frac{1}{2}\Omega q, \quad \text{where } \Omega = \begin{bmatrix}
+        0 &-\omega_x &-\omega_y &-\omega_z \\
+        \omega_x &0 &\omega_z &-\omega_y \\
+        \omega_y &-\omega_z &0 &\omega_x \\
+        \omega_z &\omega_y &-\omega_x &0 \\
+    \end{bmatrix}
+\end{equation}
+\begin{equation*}
+    \text{Recall that } \omega^b_{b/v} = \begin{bmatrix}
+        p \\ q \\ r
+    \end{bmatrix} = \begin{bmatrix}
+        \omega_x \\ \omega_y \\ \omega_z
+    \end{bmatrix}
+\end{equation*}
 
+\paragraph{Converting Between Representations}
+There are different methods based on which representation is being converted from/to. For ease, MATLAB has the built-in functions \verb|eul2dcm|, \verb|dcm2quat|, \verb|quat2eul|. There is also the \verb|angle2quat| function.
+
+\subsubsection{Homogenous Transformation Matrix}
+The idea behind the homogenous transformation matrix is to combine rotation and translation.
+
+\subsection{Flat Earth Equations of Motion}
 
 \end{document}
