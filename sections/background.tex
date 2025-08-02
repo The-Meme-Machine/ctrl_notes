@@ -54,7 +54,7 @@ Convolution in the time domain is equal to multiplication in the frequency domai
     \mathcal{L}\{[x * y](t)\} = X(s) \cdot Y(s)
 \end{equation}
 
-\paragraph{Transfer Functions}
+\paragraph{Transfer Functions} \label{sec:transfer_func}
 Applying the Laplace transform to a time domain function will produce the frequency domain representation the input-output relationship of a SISO LTI system. Classical transfer functions do not exist for LTV or nonlinear systems. In the typical state space system:
 \begin{align*}
     \dot{X}(s) = sX(s) - X(0) &= AX(s) + BU(s) \\
@@ -99,10 +99,10 @@ The feed-through matrix $D$ is zero when the transfer function is strictly prope
 \subsubsection{Matrix Inversion}
 \subsubsection{Eigenvectors \& Eigenvalues} \label{sec:eig}
 The eigenvalue problem seeks to find the directions $v$ of the square matrix $A$ that result in a pure scaling of $\lambda$ of $v$ when $A$ is right-multiplied by $v$.
-\begin{description}
-    \item[$\lambda$] - Eigenvalues
-    \item[$v$] - Eigenvectors  
-\end{description}
+\begin{align*}
+    \lambda &- \text{Eigenvalues} \\
+    v &- \text{Eigenvectors}  
+\end{align*}
 This must satisfy the following equation:
 \begin{equation}
     Av_i = \lambda_i v_i

@@ -117,7 +117,143 @@ Since $\lambda$ is a scalar, this equation implies the state of the system will 
 \end{equation*}
 Any zero input motion that a given LTI system can exhibit can be expressed as a superposition of the system modes.
 
+\paragraph{Example: Conventional Aircraft Modes}
+\begin{description}
+    \item[Phugoid]
+    \item[Dutch Roll]
+    \item[Subsidence]   
+\end{description}
+
+\paragraph{Example: System Modes}
+Take the following 2D mass-spring-damper system:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{2dMSD.png}
+    \caption{2D Nonlinear Mass-Spring-Damper System}
+    \label{fig:3MSD}
+\end{figure}
+We can define the state, control input, and desired output vectors as follows:
+
+\begin{equation*} 
+  x(t) =
+  \begin{bmatrix}
+  p_{x}\\ 
+  p_{y}\\ 
+  \dot{p_x}(t)\\ 
+  \dot{p_y}(t) 
+  \end{bmatrix},
+\quad
+  u(t) =
+  \begin{bmatrix}
+  f_{x}\\ 
+  f_{y}
+  \end{bmatrix},
+\quad
+  y(t) =
+  \begin{bmatrix}
+  p_{x}\\ 
+  p_{y}
+  \end{bmatrix}
+\end{equation*}
+
+For this system, gravity can be neglected. We can define variables as follows: $\delta_i$ is the displacement of each mass/damper pair, $\dot{\delta}_i$, is the rate of displacement of each mass/damper pair, $\hat{n}_i$ is the unit vector pointing from the attachment point of each mass/damper pair towards the position of the mass. The variables $k_i$ and $c_i$ are the spring and damper constants respectively, where $i$ represents each mass/damper grouping. 
+
+In order to find the function describing the dynamics of the system, the state vector is differentiated, because $\dot{x}(t) = f(x(t), u(t))$. The second derivative of the position of the mass, $\Ddot{p}$, can be found using Newton's Laws of Motion, as seen in Eq. \ref{eq:xdot}.
+
+\begin{equation} \label{eq:xdot}
+    \dot{x}(t) = 
+    \begin{bmatrix}
+        \dot{p}_{x}(t) \\
+        \dot{p}_{y}(t) \\
+        \ddot{p}_{x}(t) \\
+        \ddot{p}_{y}(t) \\
+    \end{bmatrix}
+    \Rightarrow
+    \begin{bmatrix}
+        \dot{p}_{x}(t) \\
+        \dot{p}_{y}(t) \\
+        \sum [k_i \cdot \delta_i \cdot \hat{n}_{x, i}] + \sum [c_i \cdot \dot{\delta}_i \cdot \hat{n}_{x, i}] + f_x \\
+        \sum [k_i \cdot \delta_i \cdot \hat{n}_{y, i}] + \sum [c_i \cdot \dot{\delta}_i \cdot \hat{n}_{y, i}] + f_y \\
+    \end{bmatrix}
+\end{equation}
+
+Next, the equations of the system can be derived by linearizing about the equilibrium point, represented by $\Bar{x}(t)$ and $\Bar{y}(t)$. The linearization is done by holding one variable constant about the equilibrium point while the derivative with respect to the other is computed. The system matrices calculated (numerical Jacobian) from the initial system variables given are:
+
+\begin{equation*} 
+  A =
+  \begin{bmatrix}
+    0 &0 &1 &0\\ 
+    0 &0 &0 &1\\
+    -2.5 &1.5 &0 &0\\
+    1.5 &-3.5 &0 &0
+  \end{bmatrix},
+\quad
+  B =
+    \begin{bmatrix}
+        0 &0 \\ 
+        0 &0 \\
+        1 &0 \\
+        0 &1
+    \end{bmatrix},
+\quad
+  C =
+  \begin{bmatrix}
+  1 &0 &0 &0 \\
+  0 &1 &0 &0
+  \end{bmatrix},
+  \quad
+  D =
+  \begin{bmatrix}
+  0 &0\\ 
+  0 &0
+  \end{bmatrix}
+\end{equation*}
+
+MATLAB's built in \verb|eig()| function can be used to find the eigenvalues and corresponding eigenvectors. The eigenvalues and their corresponding eigenvectors are found below. Each row in the eigenvalue vector corresponds to the same indexed column in the eigenvector matrix.
+
+\begin{equation*}
+    e = 
+    \begin{bmatrix}
+        -0 + 2.1404i \\
+        -0 - 2.1404i \\ 
+         0 + 1.1912i \\
+         0 - 1.1912i
+    \end{bmatrix},
+    \quad
+    V = 
+    \begin{bmatrix}
+        0 + 0.2475i  &0 - 0.2475i   &0 - 0.5216i   &0 + 0.5216i \\
+        0 - 0.3434i  &0 + 0.3434i   &0 - 0.3760i   &0 + 0.3760i \\ 
+        -0.5297 - 0i  &-0.5297 + 0i   &0.6213 + 0i   &0.6213 + 0i \\ 
+         0.7350 + 0i  & 0.7350 + 0i   &0.4478 + 0i   &0.4478 - 0i
+    \end{bmatrix}
+\end{equation*}
+
+The A matrix has two complex conjugate pairs of eigenvectors, meaning that the system has two modes. The modes are found by taking the real part of the complex eigenvectors and plugging them in as the initial state. The first two eigenvectors correspond to the direction seen in Fig. \ref{fig:mode1}, and the second two correspond to Fig. \ref{fig:mode2}. Both modes oscillate, although the first mode oscillates faster. Neither exponentially grows for two reasons: there is no forcing input applied, and the absence of damping results in a purely imaginary eigenvalue, which means motion is purely oscillatory with no gain. Neither exponentially decays for the same reason. The relationship between the modes and the damping coefficients is such that when the system is undamped, it is in a state of pure oscillation, and thus the eigenvalues are purely imaginary. Adding a damping coefficient adds a real component to the eigenvalues, which represents the damping effect. Moreover, the damped natural frequency will be less than that of an undamped system.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{mode1.png}
+        \caption{Direction of First Mode}
+        \label{fig:mode1}
+    \end{subfigure}%
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=0.9\linewidth]{mode2.png}
+        \caption{Direction of Second Mode}
+        \label{fig:mode2}
+    \end{subfigure}
+    
+    \caption{System Modes}
+\end{figure}
+
+In order to excite the system along its mode, the eigenvectors corresponding to either eigenvalue pair can be plugged into the function as an initial state $x(0)$. It can be observed that the linear simulations do not match the nonlinear ones. This is due to the imprecision of the linearization operation performed; The farther the mass travels from the equilibrium point, the farther the nonlinear simulation diverges from the linear one. This is because the system matrices derived through linearization are only very accurate around the point about which they were linearized, that being the equilibrium point.
+
 \subsubsection{System Poles}
+
+\paragraph{Example: System Poles}
 
 \subsubsection{System Zeros}
 The presence of a zero in an LTI system is an indication that the system can exhibit zero output even when the state and control input are nonzero. Intuitively: the presence of a zero implies that there are special combinations of non-zero initial conditions and non-zero control input that produce non-zero state time histories and zero output time histories.
@@ -133,6 +269,87 @@ Goal: find non-zero initial conditions and control input so that the output is z
         x(t) \\ u(t)
     \end{bmatrix} \neq 0 \Rightarrow y(t) = 0
 \end{equation*}
+
+\paragraph{Example: System Zero}
+To demonstrate a system zero, take the example of a triple mass-spring-damper system, in which the input is the forcing applied to $m_1$. Defining the output as $p_2$, the input that results in a zero output (motion) in $m_2$ can be found.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{3MSD.png}
+    \caption{Triple Mass-Spring-Damper System}
+    \label{fig:3MSD}
+\end{figure}
+The equations of motion (derived from Newton's laws) are as follows:
+\begin{align*} 
+    m_1 \ddot{p}_1(t) &= k_1(p_2(t) - p_1(t)) + c_1(\dot{p}_2(t) - \dot{p}_1(t)) + f(t) \\
+    m_2 \ddot{p}_2(t) &= k_1(p_1(t) - p_2(t)) + k_2(p_3(t) - p_2(t)) + c_1(\dot{p}_1(t) - \dot{p}_2(t)) + c_2(\dot{p}_3(t) - \dot{p}_2(t)) \\
+    m_3 \ddot{p}_3(t) &= k_2(p_2(t) - p_3(t)) - k_3p_3(t) + c_2(\dot{p}_2(t) - \dot{p}_3(t)] - c_3 \dot{p}_3(t)
+\end{align*}
+These equations of motion can then be arranged into the LTI state-space matrix form, giving the following state matrices.
+\begin{equation*} 
+  A =
+  \begin{bmatrix}
+    0 &0 &0 &1 &0 &0 \\
+    0 &0 &0 &0 &1 &0 \\
+    0 &0 &0 &0 &0 &1 \\
+     -k_1/m_1 &k_1/m_1 &0 &- c_1/m_1 &c_1/m_1 &0 \\
+     k_1/m_2 &- (k_1 + k_2)/m_2 &k_2/m_2 &c_1/m_2 &- (c_1 + c_2)/m_2 &c_2/m_2 \\
+    0 &k_2 / m_3 &- (k_2 + k_3)/m_3 &0 &c_2/m_3 &- (c_2 + c_3)/m_3
+  \end{bmatrix}
+\end{equation*}
+
+\begin{equation*}
+    B =
+    \begin{bmatrix}
+        0 \\
+        0 \\
+        0 \\
+        \frac{1}{m_1} \\
+        0 \\
+        0
+    \end{bmatrix},
+\quad
+  C =
+  \begin{bmatrix}
+  0 &1 &0 &0 &0 &0
+  \end{bmatrix},
+  \quad
+  D =
+  \begin{bmatrix}
+  0
+  \end{bmatrix}
+\end{equation*}
+The system zeros can easily be found by converting the state space system into a zero-pole-gain form using MATLAB's \verb|zpk()| function. The poles of the system are compared to the zeros to establish which pole-zero pairs cancel, and which pole will lead to the desired system behavior. None of the zeros overlap a pole, yet the first zero has only a real component, indicating a lack of oscillation. The second and third zeros are conjugate pairs with only imaginary components. The second zero $ s_0 = 0 + 1.4142i $ was used for the following computations.
+
+The initial condition vector was computed by setting up a generalized eigenvalue problem matrix using the system matrices.
+
+\begin{equation*} \label{eq:eigenmatrix}
+    A_z =
+  \begin{bmatrix}
+    s_0 I - A &-B  \\
+    C &D 
+  \end{bmatrix}
+\end{equation*}
+
+The null space of the $A_z$ matrix corresponds to the initial state $x_0$ and forcing input $u_0$. The values calculated for these variables is as follows:
+
+\begin{equation*}
+    x_0 = 
+    \begin{bmatrix}
+        -0.0098 \\
+        0.0000 \\
+        0.4964 \\
+        -0.0973 \\ 
+        0.0000 \\ 
+        -0.0003
+    \end{bmatrix},
+    \quad
+    u_0 = 
+    \begin{bmatrix}
+        -0.4768 - 0.1378i
+    \end{bmatrix}
+\end{equation*}
+
+The system is then solved using MATLAB's \verb|ode45()| function. The initial state $x_0$ and input $u_0$ can be plugged into the system to confirm that $m_2$ demonstrates zero motion.
 
 \subsubsection{System Modes for Second-order Systems}
 \subsubsection{Bounded Input, Bounded Output Stability}
