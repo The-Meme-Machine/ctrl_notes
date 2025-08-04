@@ -130,7 +130,7 @@ Take the following 2D mass-spring-damper system:
     \centering
     \includegraphics[width=1\linewidth]{2dMSD.png}
     \caption{2D Nonlinear Mass-Spring-Damper System}
-    \label{fig:3MSD}
+    \label{fig:2dMSD}
 \end{figure}
 We can define the state, control input, and desired output vectors as follows:
 
@@ -212,7 +212,7 @@ Next, the equations of the system can be derived by linearizing about the equili
 MATLAB's built in \verb|eig()| function can be used to find the eigenvalues and corresponding eigenvectors. The eigenvalues and their corresponding eigenvectors are found below. Each row in the eigenvalue vector corresponds to the same indexed column in the eigenvector matrix.
 
 \begin{equation*}
-    e = 
+    \lambda = 
     \begin{bmatrix}
         -0 + 2.1404i \\
         -0 - 2.1404i \\ 
@@ -220,7 +220,7 @@ MATLAB's built in \verb|eig()| function can be used to find the eigenvalues and 
          0 - 1.1912i
     \end{bmatrix},
     \quad
-    V = 
+    v = 
     \begin{bmatrix}
         0 + 0.2475i  &0 - 0.2475i   &0 - 0.5216i   &0 + 0.5216i \\
         0 - 0.3434i  &0 + 0.3434i   &0 - 0.3760i   &0 + 0.3760i \\ 
@@ -251,6 +251,8 @@ The A matrix has two complex conjugate pairs of eigenvectors, meaning that the s
 
 In order to excite the system along its mode, the eigenvectors corresponding to either eigenvalue pair can be plugged into the function as an initial state $x(0)$. It can be observed that the linear simulations do not match the nonlinear ones. This is due to the imprecision of the linearization operation performed; The farther the mass travels from the equilibrium point, the farther the nonlinear simulation diverges from the linear one. This is because the system matrices derived through linearization are only very accurate around the point about which they were linearized, that being the equilibrium point.
 
+\paragraph{Natural Frequency}
+
 \subsubsection{System Poles}
 
 \paragraph{Example: System Poles}
@@ -261,7 +263,8 @@ The presence of a zero in an LTI system is an indication that the system can exh
     x(0) \neq 0, u(t) \neq 0 \Rightarrow x(t) \neq 0, y(t) = 0
 \end{equation*}
 Components of the initial conditions and control input may combine and vanish, resulting in no perceptible contribution to the input. It follows that removing said components from the initial conditions and control input would generate the same output $y(t)$. \\
-Not all LTI systems have zeros. Zeros are properties of the system at hand. Unlike poles, zeros do not influence the BIBO stability of the system. The BIBO stability is determined by the location of its poles, even in cases that even have zeros in the right hald plane.
+Not all LTI systems have zeros. Zeros are properties of the system at hand. Unlike poles, zeros do not influence the BIBO (\underline{\ref{sec:BIBO}}) stability of the system. The BIBO stability is determined by the location of its poles, even in cases that even have zeros in the right hald plane.
+
 \paragraph{Formal Definition of a Zero}
 Goal: find non-zero initial conditions and control input so that the output is zero for all time.
 \begin{equation*}
@@ -269,6 +272,18 @@ Goal: find non-zero initial conditions and control input so that the output is z
         x(t) \\ u(t)
     \end{bmatrix} \neq 0 \Rightarrow y(t) = 0
 \end{equation*}
+
+\paragraph{Minimum Phase vs. Non-minimum Phase Zeros}
+Minimum phase zeros are zeros that have non-positive real parts. Non-minimum phase zeros are zeros that have positive real parts. The naming convention follow from the Bode plot. If both are arranged symmetrically about the $i\omega$ axis, they will generate the same Bode magnitude plot, but the minimum phase plot will lie below that of the non-minimum phase plot. \\
+To build intuition on the effect minimum and non-minimum phase zeros have on a system, consider an MSD system, with transfer function:
+\begin{equation*}
+    T(s) = \frac{Y(s)}{U(s)} = \frac{s \pm z}{s^2 + 2\zeta \omega_n s + \omega_n^2}
+\end{equation*}
+which exhibits two stable poles and one zero, which is a minimum if the + sign is used, and non-minimum if the - sign is used. We can rearrange the above equation and take its inverse Laplace transform to obtain a time-domain representation of the system.
+\begin{equation*}
+    \dot{u}(t) \pm zu(t) = f(t) = \ddot{y}(t) + 2\zeta\omega_n\dot{y}(t) + \omega_n^2
+\end{equation*}
+We have introduced $f(t)$ to represent the forcing function. In this representation we can understand the zeros as determining the input dynamics that relate the control input $u(t)$ to the forcing function $f(t)$. Likewise, the poles can be understood as determining the output dynamics that relate the forcing function $f(t)$ to $y(t)$.
 
 \paragraph{Example: System Zero}
 To demonstrate a system zero, take the example of a triple mass-spring-damper system, in which the input is the forcing applied to $m_1$. Defining the output as $p_2$, the input that results in a zero output (motion) in $m_2$ can be found.
@@ -352,9 +367,16 @@ The null space of the $A_z$ matrix corresponds to the initial state $x_0$ and fo
 The system is then solved using MATLAB's \verb|ode45()| function. The initial state $x_0$ and input $u_0$ can be plugged into the system to confirm that $m_2$ demonstrates zero motion.
 
 \subsubsection{System Modes for Second-order Systems}
-\subsubsection{Bounded Input, Bounded Output Stability}
 
-\subsection{Frequency Domain Methods}
+\subsection{System Stability}
+\subsubsection{Bounded Input, Bounded Output Stability} \label{sec:BIBO}
+\subsubsection{Routh-Hourwitz Criterion}
+\subsubsection{Nyquist Criterion}
+
+\subsection{Sensitivity}
+\subsubsection{Cosensitivity}
+
+% \subsection{Frequency Domain Methods}
 
 
 \end{document}

@@ -6,6 +6,14 @@
 Some background information must be understood before delving into control theory.
 \subsection{Calculus}
 I am not trying to rewrite a textbook here, nor do I have to knowledge to. This will just be a quick refresher on the most important topics.
+\subsubsection{Euler's Formula}
+\begin{equation} \label{eq:euler_form}
+    e^{ix} = \cos(x) + i\sin(x)
+\end{equation}
+\paragraph{Euler's Identity}
+\begin{equation} \label{eq:euler_id}
+    e^{i \pi} + 1 = 0
+\end{equation}
 \subsubsection{Differentiation}
 It can be simply described as the rate of change of a quantity or function. Represented by the slope of a function.
 \subsubsection{Integration}
@@ -32,12 +40,14 @@ Convolution integrals are useful for solving initial value problems with general
     (f * g)(t) = \int_{0}^{t} f(t-\tau)g(\tau)d\tau
 \end{equation}
 
+\subsubsection{Complex-plane Geometry}
+
 \subsubsection{Fourier Transforms}
 Any periodic function can be represented by a Fourier series (series of periodic functions).
 
 For periodic functions that decay to zero, we can use the Fourier transform.
 \begin{equation}
-    f(w) = \int_{-\infty}^{\infty}f(t)e^{-iwt}dt
+    f(w) = \int_{-\infty}^{\infty}f(t)e^{-i\omega t}dt
 \end{equation}
 This transform converts a continuous time domain signal into a continuous frequency domain signal. In other words, it converts a signal into its component frequencies.
 
@@ -68,8 +78,6 @@ The quantity $(sI-A)^{-1}$ is called the resolvant of A and represents the Lapla
 \begin{equation}
     T(s) := \frac{Y(s)}{U(s)} = C(sI-A)^{-1}B+D
 \end{equation}
-
-\paragraph{Geometry of Transfer Functions}
 
 \subsubsection{Delayed Differential Equations}
 DDE are when the system depends on a delayed version of state.
@@ -120,7 +128,7 @@ where in general $\lambda_i \in \mathbb{C}$ is a complex scalar and $v_i \in \ma
 The computation forms a $n_x^{\text{th}}$-order polynomial in $\lambda_i$ when $n_x$ roots - each root representing possibly repeated eigenvalues. The eigenvector corresponding to an egienvalue represents the direction associated with the null-space of the matrix $(\lambda_i I -A)$. The eigenvectors associated with an eigenvalue can be used to span the null space of $\lambda_i I - A$.
 
 \paragraph{Relating Eigenvalues and Poles}
-det($s I - A$) is the characteristic polynomial, the roots of which are both the poles and eigenvalues of the system. This also means the eigenvalues and poles are not only dependent on $A$ and are thus independent of the input or output.
+det($s I - A$) is the characteristic polynomial of the system, the roots of which are both the poles and eigenvalues of the system. This also means the eigenvalues and poles are not only dependent on $A$ and are thus independent of the input or output.
 
 \subsection{Mechanics (Newtonian)}
 Understanding the physics that inform the behavior of a system is critical to modeling and controlling it.
@@ -131,16 +139,44 @@ Understanding the physics that inform the behavior of a system is critical to mo
 \end{description}
 \subsubsection{Linear}
 \paragraph{Position / Velocity / Acceleration}
+\paragraph{Example: Mass-Spring-Damper System}
+The classical example of a physical linear system is the mass-spring-damper system.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{MSD.png}
+    \caption{MSD System}
+    \label{fig:MSD}
+\end{figure}
+Applying Newton's Laws, the governing equation can be derived.
+\begin{equation}
+    \sum F_x = F(t) - c\dot{x} - kx = m\ddot{x}
+\end{equation}
+where $F(t)$ is the forcing function (force applied), $k$ is the spring constant, $c$ is the damper constant, and $m$ is the mass of the block.
+
 \paragraph{Momentum}
 \subsubsection{Rotational}
 \paragraph{Angular Position / Velocity / Acceleration}
+An analog to the linear system can be made for a rotational system.
 \paragraph{Angular Momentum}
 \paragraph{Coriolis Force}
 The presense of rotation adds an additional (faux) force. This is described further in (\underline{\ref{sec:coriolis}}).
 \subsubsection{Energy}
 \subsubsection{Electrical}
+
 Electrical circuits can be modeled very similarly to the mechanical system. The classic example is RLC (resistor-inductor-capacitor) circuits.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{RLC.png}
+    \caption{RLC System}
+    \label{fig:RLC}
+\end{figure}
+
+Applying the Kirchov's Current and Voltage Laws, the governing equation can be derived.
+\begin{equation}
+    V(t) - Ri - L\frac{di}{dt} - \frac{1}{C}\int idt = 0
+\end{equation}
+where $V(t)$ is the forcing function, $R$ is the resistancem $L$ is the inductance, and $C$ is the capacitance.
 
 \subsection{Lagrangian Mechanics}
 Lagrangian mechanics are preferable to use for dynamical systems that have multiple components whose interaction is complicated to express (eg. multi-body systems). This is especially true if internal reactions are not of immediate interest.
