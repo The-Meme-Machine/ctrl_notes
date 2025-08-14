@@ -40,9 +40,15 @@ Convolution integrals are useful for solving initial value problems with general
     (f * g)(t) = \int_{0}^{t} f(t-\tau)g(\tau)d\tau
 \end{equation}
 
+Convolution is a way of combining two functions (signals, images, etc.) to produce a third one that shows how one affects the other. Intuitively, it can be thought of as a blending or filtering process.
+
 \subsubsection{Complex-plane Geometry}
 
 \subsubsection{Fourier Transforms}
+\paragraph{Fourier Series}
+
+
+\paragraph{Fourier Transforms}
 Any periodic function can be represented by a Fourier series (series of periodic functions).
 
 For periodic functions that decay to zero, we can use the Fourier transform.
@@ -63,6 +69,23 @@ Convolution in the time domain is equal to multiplication in the frequency domai
 \begin{equation}
     \mathcal{L}\{[x * y](t)\} = X(s) \cdot Y(s)
 \end{equation}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[auto, node distance=8cm,>=latex']
+        \node[coordinate, name=start](start){};
+        \node[block, right of=start](ptd){Problem (Time Domain)};
+        \node[block, right of=ptd](std){Solution (Time Domain)};
+        \draw [->] (ptd) -- node[name=u] {Convolution} (std);
+        \node[block, name=psd, below of=ptd](psd){Problem ($s$ Domain)};
+        \node[block, right of=psd](ssd){Solution ($s$ Domain)};
+        \draw [->] (ptd) -- node[node distance=2cm]{$\mathcal{L}$ Table} (psd);
+        \draw [->] (psd) -- node {TF Algebra} (ssd);
+        \draw [->] (ssd) -- node {$\mathcal{L}^{-1}$ Table} (std);
+    \end{tikzpicture}
+    \caption{Laplace Problem Approach Flowchart}
+\end{figure}
+Two alternative approaches: solve the (convoluted) convolution integral, or transform into the frequency domain, perform simple algebra, and use the inverse transform to find the solution in the time domain.
 
 \paragraph{Transfer Functions} \label{sec:transfer_func}
 Applying the Laplace transform to a time domain function will produce the frequency domain representation the input-output relationship of a SISO LTI system. Classical transfer functions do not exist for LTV or nonlinear systems. In the typical state space system:
@@ -143,7 +166,21 @@ Understanding the physics that inform the behavior of a system is critical to mo
 The classical example of a physical linear system is the mass-spring-damper system.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\linewidth]{MSD.png}
+    % \includegraphics[width=0.5\linewidth]{MSD.png}
+    \begin{tikzpicture}
+        % \node[draw,outer sep=0pt,thick] (M2) at (3,0) [minimum width=1.5cm, minimum height=1.5cm] {$m_2$};
+        \node[ground] (wall) [minimum width=0.1cm, minimum height=2cm] {};
+        \node[draw,outer sep=0pt,thick] (M1) at (3,0) [minimum width=1.5cm, minimum height=1.5cm] {$m$};
+        \node[ground] (ground) at (1.5, -0.9) [minimum width=5cm, minimum height=0.1cm] {};
+        \draw[spring] ($(wall.east) - (0,0.5)$) -- ($(M1.west) - (0,0.5)$) node [midway,above] {$k$};
+        \draw[damper] ($(wall.east) + (0,0.5)$) -- ($(M1.west) + (0,0.5)$) node [midway,above] {$c$};
+        % \draw[thick, dashed] ($(M1.north west)$) -- ($(M1.north west) + (0,1)$);
+        % \draw[thick, dashed] ($(M2.north west)$) -- ($(M2.north west) + (0,1)$);
+        \draw[ultra thick, -latex] ($(M1.east)$) -- ($(M1.east) + (1,0)$) node [midway, below] {$F$};
+        % \draw[ultra thick, -latex] ($(M1.north west) + (0,0.75)$) -- 
+        %                             ($(M1.north west) + (1,0.75)$);
+        % \draw[ultra thick, -latex] ($(M1.west) - (1,0)$) -- ($(M1.west)$);
+    \end{tikzpicture}
     \caption{MSD System}
     \label{fig:MSD}
 \end{figure}

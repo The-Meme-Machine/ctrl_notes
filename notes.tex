@@ -19,6 +19,9 @@
 \usepackage{titlesec}
 \usepackage{subfiles}
 
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows, positioning, calc, patterns, decorations, decorations.pathmorphing,decorations.markings}
+
 \usepackage{draftwatermark}
 \SetWatermarkText{}
 \SetWatermarkScale{0}
@@ -48,6 +51,8 @@
 }
 
 % Dark mode
+\definecolor{bgcolor}{rgb}{0.13, 0.117, 0.109}
+\definecolor{txtcolor}{rgb}{0.686, 0.663, 0.649}
 \pagecolor[rgb]{0.13, 0.117, 0.109} 
 % \color[rgb]{0.463,0.431,0.415} % low contrast
 \color[rgb]{0.686, 0.663, 0.649} % high contrast
@@ -57,6 +62,24 @@
 \date{May 2025}
 
 \begin{document}
+
+\tikzstyle{block} = [draw, fill=bgcolor, rectangle, minimum height=3em, minimum width=5em]
+\tikzstyle{sum} = [draw, fill=bgcolor, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,txtcolor}]
+\tikzstyle{spring}=[thick,decorate,decoration={zigzag,pre length=0.3cm,post length=0.3cm,segment length=6}]
+\tikzstyle{damper}=[thick,decoration={markings, mark connection node=dmp, mark=at position 0.5 with 
+   {
+     \node (dmp) [thick,inner sep=0pt,transform shape,rotate=-90,minimum
+ width=15pt,minimum height=3pt,draw=none] {};
+     \draw [thick] ($(dmp.north east)+(2pt,0)$) -- (dmp.south east) -- (dmp.south
+ west) -- ($(dmp.north west)+(2pt,0)$);
+     \draw [thick] ($(dmp.north)+(0,-5pt)$) -- ($(dmp.north)+(0,5pt)$);
+   }
+ }, decorate]
+
+\tikzstyle{ground}=[fill=txtcolor,pattern=north east lines,draw=none,minimum width=0.75cm,minimum height=0.3cm]
 
 % Title Page
 \begin{center}

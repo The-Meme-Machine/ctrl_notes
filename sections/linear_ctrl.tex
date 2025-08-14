@@ -4,15 +4,48 @@
 
 \section{Linear Control Methods}
 \subsection{Open Loop}
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[auto, node distance=4cm,>=latex']
+    \node [input, name=input] {Reference};
+    \node [block, right of=input] (controller) {Controller};
+    \node [block, right of=controller, pin={[pinstyle]above:Disturbances ($d$)}, node distance=3cm] (system) {System};
+    \draw [->] (controller) -- node[name=u] {$u$} (system);
+    \node [output, right of=system] (output) {System Output};
+    \draw [->] (input) -- node {Reference ($r$)} (controller);
+    \draw [->] (system) -- node [name=y] {Output ($y$)}(output);
+    \end{tikzpicture}
+    \caption{Block Diagram of Open Loop System}
+    \label{fig:openBlock}
+\end{figure}
 The system identification reveals how the inputs affect the outputs and the state of the system. We can work backwards from the desired output to find the required input. 
 \paragraph{Example} In the context of a car's cruise control, we would like to achieve a desired speed with our throttle input. With a model of the car, we can determine the effect of the factors at play in the system: Throttle response, engine force, drag force, tire friction, etc. Treating the system as an equation and solving through, the throttle input required can be solved.
 \subsection{Closed Loop (Feedback)}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\linewidth]{feedback_block.png}
+    \begin{tikzpicture}[auto, node distance=2cm,>=latex']
+    % We start by placing the blocks
+    \node [input, name=input] {};
+    \node [sum, right of=input] (sum) {};
+    \node [block, right of=sum] (controller) {Controller};
+    \node [block, right of=controller, pin={[pinstyle]above:$d$}, node distance=3cm] (system) {Plant};
+    % We draw an edge between the controller and system block to 
+    % calculate the coordinate u. We need it to place the measurement block. 
+    \draw [->] (controller) -- node[name=u] {$u$} (system);
+    \node [output, right of=system] (output) {};
+    \node [block, below of=u] (measurements) {Measurements};
+
+    % Once the nodes are placed, connecting them is easy. 
+    \draw [draw,->] (input) -- node {$r$} (sum);
+    \draw [->] (sum) -- node {$e$} (controller);
+    \draw [->] (system) -- node [name=y] {$y$}(output);
+    \draw [->] (y) |- (measurements);
+    \draw [->] (measurements) -| node[pos=0.99] {$-$} node [near end] {$y_m$} (sum);
+    \end{tikzpicture}
     \caption{Block Diagram of Feedback Loop}
     \label{fig:feedbackBlock}
 \end{figure}
+
 \paragraph{Example} Returning to the example of the cruise control, imagine that the same system (plant + controller) encounters a hill. Climbing up the slope changes the effect of the gravity force, meaning that our previous throttle input is not longer bringing the desired results. If a feedback system is implemented, the error between the desired speed and the actual speed can be calculated. With this information available, we can design our controller to account for disturbances, such as that hill.
 
 \paragraph{Disturbance Modeling}
@@ -20,7 +53,7 @@ In between the plant and the output, disturbances in the system are modeled. An 
 
 \subsubsection{Purpose}
 \begin{emphasis} \label{sec:feedbackMyopia}
-   $\boxed{\text{Note:}}$ Feedback control systems may be myopic! In many designs, they do not have the information or sophistication to understand that current decisions might make control of the vehicle impossible later on!
+   $\boxed{\text{Note:}}$ Feedback control systems may be myopic! In many designs, they do not have the information or sophistication to understand that current decisions might make control of the vehicle impossible later on.
 \end{emphasis}
 
 \subsection{Bode Plots}
@@ -56,7 +89,14 @@ The PID controller is one of the simplest types of controllers.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\linewidth]{block.png}
+    \begin{tikzpicture}[auto, node distance=2cm,>=latex']
+    \node[input, name=input]{};
+    \node[block](p){$P(s)$};
+    \node[sum, right of=input](sum){};
+
+ 
+    \end{tikzpicture}
+
     \caption{Typical Control Block Diagram for Feedback System}
     \label{fig:typicalBlock}
 \end{figure}
